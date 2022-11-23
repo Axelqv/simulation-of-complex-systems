@@ -1,11 +1,12 @@
 import numpy as np
-from scipy.spatial import Voronoi, cKDTree
+from scipy.spatial import Voronoi, voronoi_plot_2d
+import matplotlib.pyplot as plt
 PI = np.pi
 
 
 def generate_positions_orientations(N, L, disp_factor=None):
     positions = np.random.rand(N, 2) * L - L/2
-    orientations = (np.random.rand(N) - 0.5) * 2*PI
+    orientations = np.random.rand(N) * 2*PI
     if disp_factor:
         positions[:, 0] = positions[:, 0] + disp_factor
         positions[:, 1] = positions[:, 1] + disp_factor
@@ -30,23 +31,6 @@ def particle_boundary(positions, L):
     return positions
 
 def particle_within_radius(positions, R, L):
-    # particles_with_neighbours = dict()
-    # nr_of_particles = len(positions)
-    # for i in range(nr_of_particles):
-    #     list_of_neighbours = []
-    #     for j in range(nr_of_particles):
-    #         distance1 = np.linalg.norm(positions[j, :] - positions[i, :])
-    #         positions = particle_boundary(positions, L)
-    #         distance2 = np.linalg.norm(positions[j, :] - positions[i, :])
-    #         if distance1 < R:
-    #             list_of_neighbours.append(j)
-    #         if distance2 < R:
-    #             list_of_neighbours.append(j)
-    #     particles_with_neighbours[i] = list_of_neighbours
-    # return particles_with_neighbours
-    # tree = cKDTree(positions)
-    # index = tree.query_ball_point(positions, r=R)
-    # return index
     N = len(positions)
     index_list = []
     for i in range(N):
@@ -74,22 +58,22 @@ def global_alignment(velocities, v=1):
     global_alignment_fac = np.linalg.norm(sum) / (v*N)
     return global_alignment_fac
 
-# def polygon_area(vor, particle_index):
-#     polygon_index = vor.point_region[particle_index]
-#     index_of_vertices = vor.regions[polygon_index]
-#     polygon_vertices = vor.vertices[index_of_vertices]
-#     return ConvexHull(polygon_vertices).volume
 
-def global_clustering(positions, R):
+def global_clustering(positions, R, L):
     N = len(positions)
-    vor = Voronoi(positions)
+    clone = cloning(positions, L)
+    expand_positions = np.copy(positions)
+    for i in range(len(clone)):
+        expand_positions = np.append(expand_positions, clone[i], axis=0)
+
+    vor = Voronoi(expand_positions)
     counter = 0
     for i in range(N):
         polygon_index = vor.point_region[i]
         index_of_corners = vor.regions[polygon_index]
         polygon_corners = vor.vertices[index_of_corners]
         area = PolyArea(polygon_corners)
-        if area < PI * R**2:
+        if area < (PI * R**2):
             counter += 1
     clustering_coeff = counter / N
     return clustering_coeff
@@ -107,10 +91,8 @@ def update_orientations(positions, orientations, eta, delta_t, R, L):
     particles_with_neighbours = particle_within_radius(positions, R, L)
     new_orientation = np.zeros(N)
     for i in range(N):
-        neighbours = particles_with_neighbours[i][0]
-        # nr_of_neighbours = len(neighbours)
+        neighbours = particles_with_neighbours[i]
         neighbours_orientation = orientations[neighbours]
-        # orientations_for_average = np.append(neighbours_orientation, orientations[i])
         if len(neighbours_orientation) == 1:
             average_orientation = neighbours_orientation
         else:
@@ -125,18 +107,54 @@ def update_positions(positions, velocities, delta_t, L):
 
 
 
+def cloning(positions, L):
+    clone_right = np.copy(positions)
+    clone_right[:, 0] = clone_right[:, 0] + L
+
+    clone_left = np.copy(positions)
+    clone_left[:, 0] = clone_left[:, 0] - L
+
+    clone_down = np.copy(positions)
+    clone_down[:, 1] = clone_down[:, 1] - L
+
+    clone_up = np.copy(positions)
+    clone_up[:, 1] = clone_up[:, 1] + L
+
+    clone_diagonal_1 = np.copy(positions)
+    clone_diagonal_1[:, :] = clone_diagonal_1[:, :] + L
+
+    clone_diagonal_2 = np.copy(positions)
+    clone_diagonal_2[:, :] = clone_diagonal_2[:, :] - L
+
+    clone_diagonal_3 = np.copy(positions)
+    clone_diagonal_3[:, 0] = clone_diagonal_3[:, 0] + L
+    clone_diagonal_3[:, 1] = clone_diagonal_3[:, 1] - L
+
+    clone_diagonal_4 = np.copy(positions)
+    clone_diagonal_4[:, 0] = clone_diagonal_4[:, 0] - L
+    clone_diagonal_4[:, 1] = clone_diagonal_4[:, 1] + L
+
+    clone_positions = [clone_down, clone_up, clone_right, clone_left,
+             clone_diagonal_1, clone_diagonal_2, clone_diagonal_3, clone_diagonal_4]
+    return clone_positions
+
+
+def plot_vicsek_model(positions, L):
+    clone = cloning(positions, L)
+    expand_positions = np.copy(positions)
+
+    for j in range(len(clone)):
+        expand_positions = np.append(expand_positions, clone[j], axis=0)
+
+    vor = Voronoi(expand_positions)
+    voronoi_plot_2d(vor, show_vertices=False)
+    plt.xlim([-L/2, L/2])
+    plt.ylim([-L/2, L/2])
 
 
 
 
 
-# pos, orientations = generate_positions_orientations(10, 10, 0.5)
-# par = particle_within_radius(pos, 1)
-# print(par)
-# velocities = get_velocities(orientations)
-# alignment_fac = global_alignment(velocities)
-# cluster_coeff = global_clustering(pos, 1)
-# print(cluster_coeff)
-# new_o = update_orientations(pos, orientations, 0.01, 1, 1)
+
 
 
