@@ -152,9 +152,70 @@ def plot_vicsek_model(positions, L):
     plt.ylim([-L/2, L/2])
 
 
+def particle_within_radius_V2(positions, R, L):
+    N = len(positions)
+    index_list = []
+    for i in range(N):
+        x_distance = np.abs(positions[i, 0] - positions[:, 0])
+        y_distance = np.abs(positions[i, 1] - positions[:, 1])
+        min_x_distance = np.minimum(x_distance, L-x_distance)
+        min_y_distance = np.minimum(y_distance, L - y_distance)
+        distance = np.sqrt(min_x_distance**2 + min_y_distance**2)
+        indexes = np.where(distance < R)
+        indexes = indexes[0][0]
+        index_list.append(indexes)
+    return index_list
 
 
 
+def update_orientations_V2(orientations, neighbours_index, eta, delta_t, R, L):
+    N = len(orientations)
+    W = np.random.uniform(-1/2, 1/2, N)
+    # particles_with_neighbours = particle_within_radius(positions, R, L)
+    new_orientation = np.zeros(N)
+    for i in range(N):
+        # neighbours = particles_with_neighbours[i]
+        neighbours = neighbours_index[i]
+        neighbours_orientation = orientations[neighbours]
+        neighbours_orientation = [neighbours_orientation]
+        if len(neighbours_orientation) == 1:
+            average_orientation = neighbours_orientation
+        else:
+            average_orientation = np.arctan(np.mean(np.sin(neighbours_orientation))/np.mean(np.cos(neighbours_orientation)))
+        new_orientation[i] = average_orientation + eta * W[i] * delta_t
+    return new_orientation
 
 
+def particle_within_radius_k(positions, R, L, k):
+    N = len(positions)
+    indexs_list=[]
+    for i in range(N):
+        index_list = []
+        x_distance = np.abs(positions[i, 0] - positions[:, 0])
+        y_distance = np.abs(positions[i, 1] - positions[:, 1])
+        min_x_distance = np.minimum(x_distance, L-x_distance)
+        min_y_distance = np.minimum(y_distance, L - y_distance)
+        distance = np.sqrt(min_x_distance**2 + min_y_distance**2)
+        sort_distance = np.sort(distance)
+        sort_distance = sort_distance[0:k+1]
+        for dist in sort_distance:
+            indexes = np.where(distance == dist)[0][0]
+            index_list.append(indexes)
+        indexs_list.append(index_list)
+    return indexs_list
+
+def update_orientations_k(positions, orientations, eta, delta_t, R, L, k):
+    N = len(orientations)
+    W = np.random.uniform(-1/2, 1/2, N)
+    particles_with_neighbours = particle_within_radius_k(positions, R, L, k)
+    new_orientation = np.zeros(N)
+    for i in range(N):
+        neighbours = particles_with_neighbours[i]
+        neighbours_orientation = orientations[neighbours]
+        if len(neighbours_orientation) == 1:
+            average_orientation = neighbours_orientation
+        else:
+            average_orientation = np.arctan(np.mean(np.sin(neighbours_orientation))/np.mean(np.cos(neighbours_orientation)))
+        new_orientation[i] = average_orientation + eta * W[i] * delta_t
+    return new_orientation
 
