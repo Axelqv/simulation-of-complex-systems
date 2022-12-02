@@ -1,0 +1,5 @@
+A) 
+Some rules give rise to emergent complexity and some rules make the system evolve toward a stable pattern. 
+
+c) if you randomize the initial state with 50% zeros/ ones it is easier to find non-trivial systems that evolves to a stable 
+pattern with overpopulation. 
