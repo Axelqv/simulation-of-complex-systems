@@ -265,8 +265,8 @@ for i = 1:N
 end
 scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
 scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
-msg6 = sprintf('Pheromone matrix round %d',80);
-title(msg6)
+msg5 = sprintf('Pheromone matrix round %d',50);
+title(msg5)
 
 
 

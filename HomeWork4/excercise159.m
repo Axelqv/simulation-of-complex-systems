@@ -7,40 +7,40 @@ N = 40;
 maxSteps = 80;
 nAnts = 20;
 alpha = 0.8;
-beta = 1.0;
+beta = 0.5;
 rho = 0.5;
-iterations = 80;
+iterations = 150;
+% 
+% randomVertices = GenRandomVertices(N);
+% xVertices = randomVertices(:,1);
+% yVertices = randomVertices(:,2);
+% tri = delaunayTriangulation(xVertices, yVertices);
+% triplot(tri)
 
+% Edges = edges(tri);
+% 
+% Mmatrix = zeros(N);
+% for i = 1:length(Edges)
+%     Mmatrix(Edges(i,1), Edges(i,2)) = 1;
+% end
+% Mmatrix = Mmatrix + Mmatrix';
 
-% create random vertices
-randomVertices = GenRandomVertices(N);
-xVertices = randomVertices(:,1);
-yVertices = randomVertices(:,2);
-tri = delaunayTriangulation(xVertices, yVertices);
-
-
-Edges = edges(tri);
-
-Mmatrix = zeros(N);
-for i = 1:length(Edges)
-    Mmatrix(Edges(i,1), Edges(i,2)) = 1;
-end
-Mmatrix = Mmatrix + Mmatrix';
-
-
+x = rand(1,N)*N;
+y = rand(1,N)*N;
+scatter(x,y)
 % Calculating the distance
 distanceMatrix = Distances(Mmatrix, randomVertices);
 
 % Calculating the weightmatrix
 weightMatrix = WeightMatrix(distanceMatrix);
 
-
 % calculating the pheromone matrix
 pheromoneMatrix = PheromoneMatrix(Mmatrix); 
 
+%%%%%
 % to avoid that starting point is to close to end point
 distanceCondition = 0;
-while distanceCondition < 30
+while distanceCondition < 100 || distanceCondition > 110
     s0 = randi(N);
     t0 = randi(N);
     distanceCondition = pdist2(randomVertices(s0,:), randomVertices(t0,:));
@@ -67,7 +67,7 @@ for iteration = 1:iterations
     end
     
     %%% Check which ants that arrive to the destination
-    shortestPathDistance = 100;
+    shortestPathDistance = 300;
     nReachedDestination = 0;
     arrivals = {};    % append all the ants that reach the destination
     arrivalsSimplified = {};    % append the simplified paths that reached 
@@ -98,76 +98,6 @@ for iteration = 1:iterations
     pheromoneMatrices{iteration} = pheromoneMatrix;
     shortestPathDistances(end+1) = shortestPathDistance;
 end
-
-
-%%% Plot all ants that reached the destination
-% for k = 1:length(arrivals)
-%     arrivalPath = arrivals{k};
-%     figure(k)
-%     triplot(tri)
-%     hold on
-%     plotx = randomVertices(arrivalPath,1);
-%     ploty = randomVertices(arrivalPath,2);
-%     plot(plotx,ploty,'-o','LineWidth',3)
-%     scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
-%     scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
-%     legend('edges','path','startpoint','endpoint','Location','best')
-%     title('Not simplified path')
-
-%     %%% Saving the paths figures in a certain folder
-%     folder = 'C:\Users\axelq\OneDrive\Skrivbord\MpCas\Simulation of complex systems\simulation-of-complex-systems\HomeWork4\15.7\15.7b)\NotSimplified';
-%     baseFileName = sprintf('Figure %d.png', k);
-%     fullFileName = fullfile(folder, baseFileName);
-%     saveas(figure(k),fullFileName)
-% end
-
-%%% Plot the above paths when they are simplified
-% j = 1;
-% for k = length(arrivals)+1:length(arrivalsSimplified)+length(arrivals)
-%     arrivalPathSimplified = arrivalsSimplified{j};
-%     figure(k)
-%     triplot(tri)
-%     hold on
-%     plotx = randomVertices(arrivalPathSimplified,1);
-%     ploty = randomVertices(arrivalPathSimplified,2);
-%     plot(plotx,ploty,'-o','LineWidth',3)
-%     scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
-%     scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
-%     legend('edges','path','startpoint','endpoint','Location','best')
-%     title('Simplified path')
-% 
-% %     %%% Saving the Simplified paths figures in a certain folder
-% %     folder = 'C:\Users\axelq\OneDrive\Skrivbord\MpCas\Simulation of complex systems\simulation-of-complex-systems\HomeWork4\15.7\15.7b)\simplified';
-% %     baseFileName = sprintf('SimplifiedFigure %d.png', j);
-% %     fullFileName = fullfile(folder, baseFileName);
-% %     saveas(figure(k),fullFileName)
-% %     j = j+1;
-% end
-
-
-% %%
-% clc
-% figure(1)
-% plot(1:iterations,shortestPathDistances)
-% ylabel('L(n)')
-% xlabel('n')
-% title('Length of shortest path for every round')
-% index = find(shortestPathDistances==min(shortestPathDistances));
-% firstShortestPathIndex = index(1);
-% firstShortestPath = shortestPaths{firstShortestPathIndex};
-
-% figure(2)
-% triplot(tri)
-% hold on
-% plotx = randomVertices(firstShortestPath,1);
-% ploty = randomVertices(firstShortestPath,2);
-% plot(plotx,ploty,'-o','Color','r','LineWidth',3)
-% scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
-% scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
-% legend('edges','path','startpoint','endpoint','Location','best')
-% title('Shortest path')
-
-
 
 
 % find the first shorthes path
@@ -251,8 +181,7 @@ scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
 msg5 = sprintf('Pheromone matrix round %d',50);
 title(msg5)
 
-%%
-pheromoneMatrix = pheromoneMatrices{80};
+pheromoneMatrix = pheromoneMatrices{150};
 figure(6)
 for i = 1:N
     for j = 1:N
@@ -265,11 +194,59 @@ for i = 1:N
 end
 scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
 scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
-msg6 = sprintf('Pheromone matrix round %d',80);
+msg6 = sprintf('Pheromone matrix round %d',150);
 title(msg6)
 
 
+%% subsection to plot different pheromone matrixes from all the stored ones from the simulation
+pheromoneMatrix = pheromoneMatrices{80};
+figure(7)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg7 = sprintf('Pheromone matrix round %d',80);
+title(msg7)
 
+pheromoneMatrix = pheromoneMatrices{10};
+figure(8)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg8 = sprintf('Pheromone matrix round %d',10);
+title(msg8)
+
+
+pheromoneMatrix = pheromoneMatrices{5};
+figure(9)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg9 = sprintf('Pheromone matrix round %d',5);
+title(msg9)
 
 
 

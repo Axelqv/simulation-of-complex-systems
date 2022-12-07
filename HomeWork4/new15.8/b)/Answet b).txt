@@ -1,0 +1,16 @@
+b)
+Question: . Do the ants explore the full graph, or is the search, in practice, restricted only to a
+subset of the graph, especially after a few rounds? If the ants do not run over all the
+possible paths, how can we be sure that we have effectively found the minimum?
+
+Answer: From my plots I can see that the pheromones are kind of similar on all edges, like there is no cluster where there is particular more pheromones. That might have to do 
+With that there is much more nodes that each ant can choose between than before.
+Since there is more spread in the pheromones after all rounds than before (for instance N=40) there could be that there is a shorter path that never get found since the choice
+of node at each step is based on the pheromone matrix. if the Pheromone matrix after some rounds converge to the shorthes path found, we probably have found the global optimum
+
+Though I found that the above is based on a starting point and end point with a distance between them of around 100. When I run for the distance 40 between starting and end point
+which is similar for the last run with N=40 where the distance where around 30. Well with N= 120 and a distance between starting and end point of 40 I get that it's found the 
+shortest path really fast. That might have to do with that the relative distance is shorter, I mean that there is less edges to choose from when the N is bigger with the same
+distance configuration between the starting and the end point. With this configuration I believe that we can be sure that the shorthest path has been found.
+
+Comparing when I run for N=60 with the rest the same, I get comparing to N=120 and higher that it takes i little longer for it to find the shortest path.

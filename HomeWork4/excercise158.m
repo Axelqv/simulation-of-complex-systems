@@ -7,9 +7,9 @@ N = 120;
 maxSteps = 80;
 nAnts = 20;
 alpha = 0.8;
-beta = 1.0;
+beta = 0.5;
 rho = 0.5;
-iterations = 80;
+iterations = 150;
 % 
 randomVertices = GenRandomVertices(N);
 xVertices = randomVertices(:,1);
@@ -165,10 +165,37 @@ end
 %     iPheromoneMatrix = iPheromoneMatrix + 1;
 % end
 
+% index = find(shortestPathDistances==min(shortestPathDistances));
+% firstShortestPathIndex = index(1)
+% firstShortestPath = shortestPaths{firstShortestPathIndex};
+% clc
+% figure(1)
+% plot(1:iterations,shortestPathDistances)
+% ylabel('L(n)')
+% xlabel('n')
+% msg1 = sprintf('Length of shortest path for every round, N=%d. First found round=%d',N,firstShortestPathIndex);
+% title(msg1)
+% 
+% 
+% figure(2)
+% triplot(tri)
+% hold on
+% plotx = randomVertices(firstShortestPath,1);
+% ploty = randomVertices(firstShortestPath,2);
+% plot(plotx,ploty,'-o','Color','r','LineWidth',3)
+% scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+% scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+% legend('edges','path','startpoint','endpoint','Location','best')
+% msg2 = sprintf('Shortest path, N=%d. First found round=%d',N, firstShortestPathIndex);
+% title(msg2)
+
+
+% find the first shorthes path
 index = find(shortestPathDistances==min(shortestPathDistances));
 firstShortestPathIndex = index(1)
 firstShortestPath = shortestPaths{firstShortestPathIndex};
-clc
+
+% Plot the shortest paths length as fun of nr of rounds
 figure(1)
 plot(1:iterations,shortestPathDistances)
 ylabel('L(n)')
@@ -177,6 +204,7 @@ msg1 = sprintf('Length of shortest path for every round, N=%d. First found round
 title(msg1)
 
 
+% Plot the shortest path found
 figure(2)
 triplot(tri)
 hold on
@@ -191,8 +219,124 @@ title(msg2)
 
 
 
+% Plot the phermoneMatrix at round 1
+pheromoneMatrix = pheromoneMatrices{1};
+figure(3)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg3 = sprintf('Pheromone matrix round %d',1);
+title(msg3)
+
+% Plot the phermoneMatrix at first round when the shortest path is found
+pheromoneMatrix = pheromoneMatrices{firstShortestPathIndex};
+figure(4)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg4 = sprintf('Pheromone matrix round %d',firstShortestPathIndex);
+title(msg4)
 
 
+% Plot the phermoneMatrix at round 50
+pheromoneMatrix = pheromoneMatrices{50};
+figure(5)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg5 = sprintf('Pheromone matrix round %d',50);
+title(msg5)
+
+pheromoneMatrix = pheromoneMatrices{150};
+figure(6)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg6 = sprintf('Pheromone matrix round %d',150);
+title(msg6)
+
+
+%% subsection to plot different pheromone matrixes from all the stored ones from the simulation
+pheromoneMatrix = pheromoneMatrices{80};
+figure(7)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg7 = sprintf('Pheromone matrix round %d',80);
+title(msg7)
+
+pheromoneMatrix = pheromoneMatrices{10};
+figure(8)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg8 = sprintf('Pheromone matrix round %d',10);
+title(msg8)
+
+
+pheromoneMatrix = pheromoneMatrices{5};
+figure(9)
+for i = 1:N
+    for j = 1:N
+        if Mmatrix(i,j) == 1
+        plot([randomVertices(i,1),randomVertices(j,1)], ...
+            [randomVertices(i,2),randomVertices(j,2)],'-o','Color','r','LineWidth',pheromoneMatrix(i,j)*10)
+        hold on
+        end
+    end
+end
+scatter(randomVertices(s0,1),randomVertices(s0,2),'g','square','filled')
+scatter(randomVertices(t0,1),randomVertices(t0,2),'y','square','filled')
+msg9 = sprintf('Pheromone matrix round %d',5);
+title(msg9)
 
 
 

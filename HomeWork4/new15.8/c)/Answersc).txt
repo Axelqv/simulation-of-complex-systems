@@ -1,0 +1,13 @@
+15.8c)
+Question = Do
+different choices give different shortest paths? Is some choice faster in finding the
+minimum?
+
+Answer: One of the most interesting thing or what make a significant difference was to decrease the rho. Since rho is a factor that decrease the pheromone level at every new 
+round, it makes the pheromones decrease less fast and the shortest path found is found after more rounds than before. In the pheromone matrix plot, we can see more of a path 
+of the pheromone level after a lot of rounds(150 rounds) which mirror the shortest path.
+
+With a lower alpha we get a much more noisy behaviour of the shortest path length for every round. It shifts kind of chaotic.
+
+There is not so much difference when tuning the beta.
+

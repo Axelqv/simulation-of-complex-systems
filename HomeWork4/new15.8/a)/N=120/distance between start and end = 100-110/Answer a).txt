@@ -1,0 +1,6 @@
+15.8a)
+Question:  Is the global minimum found maintained over all the
+subsequent rounds?
+
+Answer: No at the run I show, the minimum is found at round 7 and at some later round the length of the shorthest path increase, then later it gets to the minimum and gets
+stuck at that minimum for the subsequent rounds.

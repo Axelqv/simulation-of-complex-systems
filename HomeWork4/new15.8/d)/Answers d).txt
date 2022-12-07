@@ -1,0 +1,10 @@
+15.d)
+Question: Try the simulation using a different number of ants A walking through the graph.
+Does this make a difference to the algorithm? Do more ants result in a more or
+less accurate algorithm? What about computational efficiency?
+
+Answer: I would say that less ants gives more chaotic behavour when looking at plot of the length of the shortest path for every round. It also do not probably find the shortest
+path since for the same cofiguration and a lot of different runs I get that the shorthes path distance is higer for less ants(10 ants instead of 20 or 30)!
+
+I also found that increasing the ants leads a little more to less fast find the shortest path. So I would say is less effective since it takes little longer for it to find
+the shorthest path. Maybe more ants would lead to a more acurate algorithm since there is more exploration, I mean there is more ants that explore trying to find the shortest path.

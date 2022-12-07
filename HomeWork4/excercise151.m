@@ -9,12 +9,13 @@ N = 10;
 Mmatrix = Matrix(N);
 figure(1)
 pcolor(Mmatrix)
+title('connection matrix')
 
 
 % b)
 randomVertices = GenRandomVertices(N);
 distances = Distances(Mmatrix, randomVertices);
-figure(1)
+figure(2)
 pcolor(distances)
 c = gray;
 colormap(c)
@@ -26,12 +27,13 @@ title('distances where white means infinity distance (no direct connections)')
 weightMatrix = WeightMatrix(distances);
 figure(3)
 pcolor(weightMatrix)
-
+title('Weight matrix')
+colorbar
 % d)
 pheromoneMatrix = PheromoneMatrix(Mmatrix); 
 figure(4)
 pcolor(pheromoneMatrix)
-
+title('Pheromone matrix')
 % e)
 path = GenPath(2, Mmatrix);
 
@@ -42,18 +44,19 @@ pathLength = GetPathLengt(path, distances);
 sPath = SimplifyPath(path, distances);
 
 % delaunay plot
+%
+% figure(2)
+% plot(x,y,'.','markersize',12)
+% grid on
+% hold on
+% DT = delaunay(x,y);
+% triplot(DT,x,y)
+
+figure(5)
 x = randomVertices(:,1);
 y = randomVertices(:,2);
-figure(2)
-plot(x,y,'.','markersize',12)
-grid on
-hold on
-DT = delaunay(x,y);
-triplot(DT,x,y)
-
-figure(3)
 tri = delaunayTriangulation(x,y);
-triplot(tri,x,y)
+triplot(tri)
 
 
 
