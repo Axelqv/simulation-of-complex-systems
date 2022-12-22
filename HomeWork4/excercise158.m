@@ -15,7 +15,6 @@ randomVertices = GenRandomVertices(N);
 xVertices = randomVertices(:,1);
 yVertices = randomVertices(:,2);
 tri = delaunayTriangulation(xVertices, yVertices);
-% triplot(tri)
 
 Edges = edges(tri);
 

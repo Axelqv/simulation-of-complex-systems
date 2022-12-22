@@ -10,24 +10,48 @@ alpha = 0.8;
 beta = 0.5;
 rho = 0.5;
 iterations = 150;
-% 
-% randomVertices = GenRandomVertices(N);
-% xVertices = randomVertices(:,1);
-% yVertices = randomVertices(:,2);
-% tri = delaunayTriangulation(xVertices, yVertices);
-% triplot(tri)
 
-% Edges = edges(tri);
-% 
-% Mmatrix = zeros(N);
-% for i = 1:length(Edges)
-%     Mmatrix(Edges(i,1), Edges(i,2)) = 1;
+
+zeros(N);
+
+vecx = [];
+vecy = [];
+for i= 1:N
+    for j=1:N
+        vecx(end+1) = i;
+        vecy(end+1) = j;
+
+    end
+end
+
+
+randomVertices = cat(1,vecx,vecy)';
+tri = delaunayTriangulation(vecx',vecy');
+triplot(tri)
+
+Edges = edges(tri);
+
+Mmatrix = zeros(length(Edges));
+for i = 1:length(Edges)
+    Mmatrix(Edges(i,1), Edges(i,2)) = 1;
+end
+Mmatrix = Mmatrix + Mmatrix';
+
+
+
+% AdjMat = false(N^2);
+% for kk=1:size(tri,1)
+%     AdjMat(tri(kk,1), tri(kk,2));
+%     AdjMat(tri(kk,2), tri(kk,3));
+%     AdjMat(tri(kk,3), tri(kk,1));
 % end
-% Mmatrix = Mmatrix + Mmatrix';
+% 
+% AdjMat = AdjMat | AdjMat';
+% Mmatrix = AdjMat;
 
-x = rand(1,N)*N;
-y = rand(1,N)*N;
-scatter(x,y)
+
+
+
 % Calculating the distance
 distanceMatrix = Distances(Mmatrix, randomVertices);
 
@@ -40,7 +64,7 @@ pheromoneMatrix = PheromoneMatrix(Mmatrix);
 %%%%%
 % to avoid that starting point is to close to end point
 distanceCondition = 0;
-while distanceCondition < 100 || distanceCondition > 110
+while distanceCondition < 40
     s0 = randi(N);
     t0 = randi(N);
     distanceCondition = pdist2(randomVertices(s0,:), randomVertices(t0,:));

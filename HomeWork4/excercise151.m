@@ -2,7 +2,6 @@ clear all
 close all
 clc
 
-%% 15.1
 N = 10;
 
 % a)
