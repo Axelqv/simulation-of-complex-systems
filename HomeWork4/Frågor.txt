@@ -1,7 +1,0 @@
-Frågor angående homework4 i simulation of complex systems
-chap 15! Ant colony
-
-fråga 15.1 b) angående distance. Ska distancerna vara helt random? alltså vilken är maxstorleken?
-		   
-		   ska även diagonalen i distance matrix vara inf?
-
